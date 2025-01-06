@@ -9,10 +9,13 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Contact</th>
-                <th>Actions</th>
+                <th>idPaciente</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cedula</th>
+                <th>Correo Electronico</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
             </tr>
         </thead>
         <tbody>

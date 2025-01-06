@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient;
+use App\Models\Gerencia;
 use Illuminate\Http\Request;
+use Psy\Command\HistoryCommand;
 
-class PatientController extends Controller
+class GerenciaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $patients = Patient::all();
-        return view('patients.index', compact('patients'));
+        $patients = Gerencia::all();
+        return view('gerencia.index', compact('gerencia'));
     }
 
     /**
@@ -21,7 +22,7 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patients.create');
+        
     }
 
     /**
@@ -29,25 +30,21 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required | string | max=255'
-            'age' => 'required | integer | min=0'
-            'contact' => 'required | string | max=255'
-        ]);
+    
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
+    public function show(Gerencia $patient)
     {
-        return view('patients.index', compact('patient'));
+        return view('gerencia.index', compact('gerencia'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Patient $patient)
+    public function edit(Gerencia $patient)
     {
         //
     }
@@ -55,7 +52,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Patient $patient)
+    public function update(Request $request, Gerencia $patient)
     {
         //
     }
@@ -63,7 +60,7 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy(Gerencia $patient)
     {
         //
     }

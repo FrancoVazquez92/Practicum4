@@ -28,5 +28,12 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::resource('patients', Controller::class);
-Route::resource('doctors', Controller::class);
+Route::resource('pacientes', Controller::class);
+Route::resource('citamedica', Controller::class);
+Route::resource('administrador', Controller::class);
+Route::resource('sistemafacturacion', Controller::class);
+Route::resource('historialmedico', Controller::class);
+Route::resource('medico', Controller::class);
+Route::resource('agenda', Controller::class);
+Route::resource('reporte', Controller::class);
+Route::resource('gerencia', Controller::class);
