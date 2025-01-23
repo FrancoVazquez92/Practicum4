@@ -12,8 +12,8 @@ class MedicoController extends Controller
      */
     public function index()
     {
-        $patients = Medico::all();
-        return view('medico.index', compact('medico'));
+        $medicos = Medico::all();
+        return view('medicos.index', compact('medicos'));
     }
 
     /**
@@ -21,7 +21,7 @@ class MedicoController extends Controller
      */
     public function create()
     {
-     
+        return view('medicos.create');     
     }
 
     /**
@@ -29,38 +29,53 @@ class MedicoController extends Controller
      */
     public function store(Request $request)
     {
-    
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'especialidad' => 'required|string|max:255',
+        ]);
+
+        Medico::create($request->all());
+        return redirect()->route('medicos.index')->with('success','Medico creado satisfactoriamente');    
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Medico $patient)
+    public function show(Medico $medico)
     {
- 
+        return view('medicos.show', compact('medico')); 
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Medico $patient)
+    public function edit(Medico $medico)
     {
-        //
+        return view('medicos.edit', compact('medico'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Medico $patient)
+    public function update(Request $request, Medico $medico)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'especialidad' => 'required|string|max:255',
+        ]);
+
+        $medico->update($request->all());
+        return redirect()->route('medicos.index')->with('success','Medico actualizados satisfactoriamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Medico $patient)
+    public function destroy(Medico $medico)
     {
-        //
+        $medico->delete();
+        return redirect()->route('medicos.index')->with('success','Medico eliminado satisfactoriamente');
     }
 }

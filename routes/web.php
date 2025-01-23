@@ -1,5 +1,14 @@
 <?php
 
+use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\GerenciaController;
+use App\Http\Controllers\HistorialMedicoController;
+use App\Http\Controllers\MedicoController;
+use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\SistemaFacturacionController;
+use App\Models\Administrador;
+use App\Models\CitaMedica;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,12 +37,12 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::resource('pacientes', Controller::class);
-Route::resource('citamedica', Controller::class);
-Route::resource('administrador', Controller::class);
-Route::resource('sistemafacturacion', Controller::class);
-Route::resource('historialmedico', Controller::class);
-Route::resource('medico', Controller::class);
-Route::resource('agenda', Controller::class);
-Route::resource('reporte', Controller::class);
-Route::resource('gerencia', Controller::class);
+Route::resource('pacientes', PacienteController::class);
+Route::resource('citamedica', CitaMedicaController::class);
+Route::resource('administrador', AdministradorController::class);
+Route::resource('sistemafacturacion', SistemaFacturacionController::class);
+Route::resource('historialmedico', HistorialMedicoController::class);
+Route::resource('medicos', MedicoController::class);
+Route::resource('agenda', AgendaController::class);
+Route::resource('reporte', ReporteController::class);
+Route::resource('gerencia', GerenciaController::class);

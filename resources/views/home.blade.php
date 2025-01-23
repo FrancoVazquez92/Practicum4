@@ -9,6 +9,6 @@
         <p class="lead">Gestion de pacientes y doctores</p>
         <hr class="my-4">
         <br>
-        <p>Autor: Monica Castro</p>
+        <p>Autor: Franco Vazquez</p>
     </div>
 @endsection
