@@ -7,8 +7,8 @@ use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SistemaFacturacionController;
-use App\Models\Administrador;
-use App\Models\CitaMedica;
+use App\Http\Controllers\AdministradorController;
+use App\Http\Controllers\CitaMedicaController;
 use Illuminate\Support\Facades\Route;
 
 /*

@@ -10,12 +10,13 @@ class Paciente extends Model
     use HasFactory;
 
     protected $fillable = [
-        'idPaciente',
-        'Nombre',
-        'Apellido',
-        'Cedula',
-        'Correo electronico',
-        'Direccion',
-        'Telefono'
+        'cedula',
+        'nombre',
+        'apellido',
+        'telefono',
+        'direccion',
+        'correoelectronico'
     ];
 }
+
+
