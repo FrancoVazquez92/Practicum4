@@ -38,7 +38,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::resource('pacientes', PacienteController::class);
-Route::resource('citamedica', CitaMedicaController::class);
+Route::resource('citasmedicas', CitaMedicaController::class);
 Route::resource('administrador', AdministradorController::class);
 Route::resource('sistemafacturacion', SistemaFacturacionController::class);
 Route::resource('historialmedico', HistorialMedicoController::class);

@@ -14,4 +14,8 @@ class Medico extends Model
         'apellido',
         'especialidad',
     ];
+    public function citas()
+    {
+        return $this->hasMany(CitaMedica::class, 'medico_id');
+    }
 }

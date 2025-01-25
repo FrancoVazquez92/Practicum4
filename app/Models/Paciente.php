@@ -17,6 +17,10 @@ class Paciente extends Model
         'direccion',
         'correoelectronico'
     ];
+    public function citas()
+    {
+        return $this->hasMany(CitaMedica::class, 'paciente_id');
+    }
 }
 
 

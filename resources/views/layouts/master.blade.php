@@ -57,7 +57,7 @@
                     </li>
                     <li class="nav-item">
 
-                        <a class="nav-link" href="{{ route('citamedica.index') }}">Cita Medicas</a>
+                        <a class="nav-link" href="{{ route('citasmedicas.index') }}">Cita Medicas</a>
 
                     </li>
 

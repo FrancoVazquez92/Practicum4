@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CitaMedica;
+use App\Models\Paciente;
+use App\Models\Medico;
 use Illuminate\Http\Request;
 
 class CitaMedicaController extends Controller
@@ -12,8 +14,8 @@ class CitaMedicaController extends Controller
      */
     public function index()
     {
-        $patients = CitaMedica::all();
-        return view('citamedica.index', compact('citamedica'));
+        $citas = CitaMedica::with(['paciente', 'medico'])->get();
+        return view('citasmedicas.index', compact('citas'));
     }
 
     /**
@@ -21,7 +23,10 @@ class CitaMedicaController extends Controller
      */
     public function create()
     {
-        
+        $pacientes = Paciente::all(['id', 'nombre', 'apellido']);
+        $medicos = Medico::all(['id', 'nombre', 'apellido']);
+
+        return view('citasmedicas.create', compact('pacientes', 'medicos'));
     }
 
     /**
@@ -29,38 +34,59 @@ class CitaMedicaController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $request->validate([
+            'paciente_id' => 'required|exists:pacientes,id',
+            'medico_id' => 'required|exists:medicos,id',
+            'fecha' => 'required|date',
+            'hora' => 'required|date_format:H:i',
+        ]);
+
+        CitaMedica::create($request->all());
+
+        return redirect()->route('citasmedicas.index')->with('success', 'Cita médica creada exitosamente.');
+
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CitaMedica $patient)
+    public function show($id)
     {
-        
+        $citas = CitaMedica::with('paciente', 'medico')->findOrFail($id);
+
+        return view('citasmedicas.show', compact('citas'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CitaMedica $patient)
+    public function edit($id)
     {
-        //
+        $cita = CitaMedica::findOrFail($id); // Obtiene la cita médica por ID
+        $pacientes = Paciente::all(); // Lista de pacientes
+        $medicos = Medico::all(); // Lista de médicos
+
+        return view('citasmedicas.edit', compact('cita', 'pacientes', 'medicos'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CitaMedica $patient)
+    public function update(Request $request, $id)
     {
-        //
+        $cita = CitaMedica::findOrFail($id);
+        $cita->update($request->all());
+        return redirect()->route('citasmedicas.index')->with('success','Cita Medica actualiza satisfactoriamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CitaMedica $patient)
+    public function destroy($id)
     {
-        //
+        $cita = CitaMedica::findOrFail($id);
+        $cita->delete();
+        return redirect()->route('citasmedicas.index')->with('success', 'Cita médica eliminada correctamente.');
     }
 }
