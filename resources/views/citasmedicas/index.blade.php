@@ -11,6 +11,7 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>Id Cita</th>
                 <th>Paciente</th>
                 <th></th>
                 <th>Medico</th>
@@ -25,6 +26,7 @@
             @foreach($citas as $cita)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ $cita->id }}</td>
                     <td>{{ $cita->paciente->nombre }}</td>
                     <td>{{ $cita->paciente->apellido }}</td>
                     <td>{{ $cita->medico->nombre }}</td>

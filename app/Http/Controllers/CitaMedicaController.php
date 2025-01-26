@@ -89,4 +89,13 @@ class CitaMedicaController extends Controller
         $cita->delete();
         return redirect()->route('citasmedicas.index')->with('success', 'Cita médica eliminada correctamente.');
     }
+    public function detalles($id)
+    {
+        $cita = CitaMedica::with(['paciente', 'medico'])->findOrFail($id);
+
+        return response()->json([
+            'paciente' => $cita->paciente,
+            'medico' => $cita->medico,
+        ]);
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SistemaFacturacionController;
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\CitaMedicaController;
+use App\Http\Controllers\AtencionMedicaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,7 @@ Route::get('/', function () {
 
 Route::resource('pacientes', PacienteController::class);
 Route::resource('citasmedicas', CitaMedicaController::class);
+Route::resource('atencionmedicas', AtencionMedicaController::class);
 Route::resource('administrador', AdministradorController::class);
 Route::resource('sistemafacturacion', SistemaFacturacionController::class);
 Route::resource('historialmedico', HistorialMedicoController::class);
@@ -46,3 +48,5 @@ Route::resource('medicos', MedicoController::class);
 Route::resource('agenda', AgendaController::class);
 Route::resource('reporte', ReporteController::class);
 Route::resource('gerencia', GerenciaController::class);
+Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles'])->name('citasmedicas.detalles');
+ 
