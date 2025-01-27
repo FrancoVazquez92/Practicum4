@@ -20,22 +20,14 @@ class AtencionMedica extends Model
 
     public function citaMedica()
     {
-        return $this->belongsTo(CitaMedica::class, 'cita_medica_id');
+        return $this->belongsTo(CitaMedica::class);
     }
-
-    /**
-     * Relación con Paciente
-     */
-    public function paciente()
+    public function Paciente()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_id');
+        return $this->belongsTo(Paciente::class);
     }
-
-    /**
-     * Relación con Medico
-     */
-    public function medico()
+    public function Medico()
     {
-        return $this->belongsTo(Medico::class, 'medico_id');
+        return $this->belongsTo(Medico::class);
     }
 }
