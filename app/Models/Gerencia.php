@@ -11,8 +11,5 @@ class Gerencia extends Model
 
     protected $fillable = [
         'idGerente',
-        'Nombre',
-        'Apellido',
-        'Correo electronico'
     ];
 }

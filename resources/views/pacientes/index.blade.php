@@ -4,7 +4,8 @@
 
 @section ('content')
 
-    <h2>Pacientes</h2>
+    <div class="container mt-4 p-4 bg-white bg-opacity-90 rounded shadow">
+    <h1 class="mb-4 fw-bold text-primary">Pacientes</h1>
 
     <a href="{{ route('pacientes.create') }}" class="btn btn-primary mb-3">Crear Paciente</a>
 

@@ -11,9 +11,5 @@ class Administrador extends Model
 
     protected $fillable = [
         'idAdministrador',
-        'Nombre',
-        'Apellido',
-        'Correo electronico',
-        'Telefono'
     ];
 }

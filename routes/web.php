@@ -1,17 +1,12 @@
 <?php
 
-use App\Http\Controllers\AgendaController;
-use App\Http\Controllers\GerenciaController;
-use App\Http\Controllers\HistorialMedicoController;
-use App\Http\Controllers\MedicoController;
-use App\Http\Controllers\PacienteController;
-use App\Http\Controllers\ReporteController;
-use App\Http\Controllers\SistemaFacturacionController;
-use App\Http\Controllers\AdministradorController;
-use App\Http\Controllers\CitaMedicaController;
-use App\Http\Controllers\AtencionMedicaController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\MedicoController;
+use App\Http\Controllers\CitaMedicaController;
+use App\Http\Controllers\AtencionMedicaController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,30 +18,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/register', function () {
-    return view('register');
-});
-
-Route::get('/login', function () {
-    return view('login');
-});*/
-Route::get('/', function () {
+Route::get('/home', function () {
     return view('home');
 })->name('home');
 
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+});
+
+require __DIR__.'/auth.php';
+
 Route::resource('pacientes', PacienteController::class);
+Route::resource('medicos', MedicoController::class);
 Route::resource('citasmedicas', CitaMedicaController::class);
 Route::resource('atencionmedicas', AtencionMedicaController::class);
-Route::resource('administrador', AdministradorController::class);
-Route::resource('sistemafacturacion', SistemaFacturacionController::class);
-Route::resource('historialmedico', HistorialMedicoController::class);
-Route::resource('medicos', MedicoController::class);
-Route::resource('agenda', AgendaController::class);
-Route::resource('reporte', ReporteController::class);
-Route::resource('gerencia', GerenciaController::class);
-Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles'])->name('citasmedicas.detalles');
- 

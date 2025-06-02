@@ -21,8 +21,6 @@ class Paciente extends Model
     {
         return $this->hasMany(CitaMedica::class, 'paciente_id');
     }
-
-    
 }
 
 
