@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Secretaria extends Model
 {
-    use HasFactory;
+    protected $table = 'secretarias';
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $fillable = ['id'];
 
-    protected $fillable = [
-        'idSecretaria',
-    ];
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'id');
+    }
 }

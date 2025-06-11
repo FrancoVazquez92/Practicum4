@@ -27,6 +27,8 @@
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('home') }}">Inicio</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('pacientes.index') }}">Pacientes</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('medicos.index') }}">Doctores</a></li>
+                <li class="nav-item me-3"><a class="nav-link" href="{{ route('secretarias.index') }}">Secretarias</a></li>
+                <li class="nav-item me-3"><a class="nav-link" href="{{ route('rols.index') }}">Roles</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('citasmedicas.index') }}">Citas Médicas</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('atencionmedicas.index') }}">Atención Médica</a></li>
             </ul>
@@ -36,7 +38,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white fw-semibold" href="#" id="usuarioDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ Auth::usuario()->name }}
+                            {{ Auth::user()->nombre }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
                             <li><a class="dropdown-item" href="{{ route('profile.show') }}">Ver Perfil</a></li>

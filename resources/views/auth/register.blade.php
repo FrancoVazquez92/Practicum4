@@ -6,7 +6,7 @@
     <title>Registro - Hospital Isidro Ayora</title>
     @vite('resources/css/app.css') <!-- Asegúrate de que Vite esté configurado -->
 </head>
-<body class="bg-cover bg-center h-screen" style="background-image: url('/images/fondo.png');"> <!-- Cambia por tu imagen -->
+<body class="bg-cover bg-center h-screen" style="background-image: url('/images/fondo.png');">
 
     <div class="flex items-center justify-center h-full">
         <div class="bg-white bg-opacity-80 p-8 rounded shadow-lg w-full max-w-md">
@@ -18,10 +18,20 @@
 
                 <!-- Nombre -->
                 <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2" for="name">Nombre</label>
-                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
+                    <label class="block text-gray-700 font-semibold mb-2" for="nombre">Nombre</label>
+                    <input id="nombre" type="text" name="nombre" value="{{ old('nombre') }}" required autofocus
                         class="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500">
-                    @error('name')
+                    @error('nombre')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Apellido -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" for="apellido">Apellido</label>
+                    <input id="apellido" type="text" name="apellido" value="{{ old('apellido') }}" required
+                        class="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500">
+                    @error('apellido')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
@@ -32,6 +42,16 @@
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required
                         class="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500">
                     @error('email')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Contacto -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" for="contacto">Número de contacto</label>
+                    <input id="contacto" type="text" name="contacto" value="{{ old('contacto') }}" required
+                        class="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500">
+                    @error('contacto')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
