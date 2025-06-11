@@ -29,6 +29,7 @@
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('pacientes.index') }}">Pacientes</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('medicos.index') }}">Doctores</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('secretarias.index') }}">Secretarias</a></li>
+                <li class="nav-item me-3"><a class="nav-link" href="{{ route('gerencias.index') }}">Gerencia</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('rols.index') }}">Roles</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('citasmedicas.index') }}">Citas Médicas</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('atencionmedicas.index') }}">Atención Médica</a></li>

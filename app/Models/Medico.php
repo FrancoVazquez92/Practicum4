@@ -2,20 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Medico extends Model
 {
-    use HasFactory;
+    protected $table = 'medicos';
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $fillable = ['id', 'especialidad'];
 
-    protected $fillable = [
-        'nombre',
-        'apellido',
-        'especialidad',
-    ];
-    public function citas()
+    public function usuario()
     {
-        return $this->hasMany(CitaMedica::class, 'medico_id');
+        return $this->belongsTo(Usuario::class, 'id');
     }
 }

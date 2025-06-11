@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Gerencia extends Model
 {
-    use HasFactory;
+    protected $table = 'gerencias';
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $fillable = ['id'];
 
-    protected $fillable = [
-        'idGerente',
-    ];
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'id');
+    }
 }

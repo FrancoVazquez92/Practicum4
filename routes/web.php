@@ -10,6 +10,7 @@ use App\Http\Controllers\CitaMedicaController;
 use App\Http\Controllers\AtencionMedicaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SecretariaController;
+use App\Http\Controllers\GerenciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Route::resource('citasmedicas', CitaMedicaController::class);
 Route::resource('atencionmedicas', AtencionMedicaController::class);
 Route::resource('secretarias', SecretariaController::class);
 Route::resource('rols', RolController::class);
-Route::resource('administradores', AdministradorController::class)->parameters([
-    'administradores' => 'administrador'
-]);
+Route::resource('administradores', AdministradorController::class)->parameters(['administradores' => 'administrador']);
+Route::resource('gerencias', GerenciaController::class);
+
 
