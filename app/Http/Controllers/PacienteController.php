@@ -2,86 +2,106 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rol;
 use App\Models\Paciente;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PacienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $pacientes = Paciente::all();
+        $pacientes = Paciente::with('usuario.rol')->get(); 
         return view('pacientes.index', compact('pacientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('pacientes.create');
+        $roles = Rol::where('nombre', 'paciente')->firstOrFail();
+        return view('pacientes.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $rol = Rol::where('nombre', 'paciente')->firstOrFail();
+
         $request->validate([
-            'cedula' => 'required | string | max:255',
-            'nombre' => 'required | string | max:255',
-            'apellido' => 'required | string | max:255',
-            'telefono' => 'required | string | max:255',
-            'direccion' => 'required | string | max:255',
-            'correoelectronico' => 'required | string | max:255',
+            'nombre'    => 'required|string|max:255',
+            'apellido'  => 'required|string|max:255',
+            'email'     => 'required|email|unique:usuarios,email',
+            'contacto'  => 'required|string|max:15',
+            'password'  => 'required|string|confirmed|min:6',
+            'direccion' => 'required|string|max:255',
+            'genero' => 'required|in:masculino,femenino',
+
         ]);
 
-        Paciente::create($request->all());
-        return redirect()->route('pacientes.index')->with('success','Paciente creado satisfactoriamente'); 
+        // Crear el usuario
+        $usuario = Usuario::create([
+            'nombre'    => $request->nombre,
+            'apellido'  => $request->apellido,
+            'email'     => $request->email,
+            'contacto'  => $request->contacto,
+            'password'  => Hash::make($request->password),
+            'rol_id'    => $rol->id,
+        ]);
+
+        // Crear el paciente
+        Paciente::create([
+            'id'        => $usuario->id,
+            'direccion' => $request->direccion,
+            'genero'    => $request->genero,
+        ]);
+
+        return redirect()->route('pacientes.index')->with('success', 'Paciente creado con éxito.');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function edit(Paciente $paciente)
+    {
+        $rol = Rol::where('nombre', 'paciente')->first();
+        $usuario = $paciente->usuario;
+        return view('pacientes.edit', compact('paciente', 'usuario', 'rol'));
+    }
+
+    public function update(Request $request, Paciente $paciente)
+    {
+        $request->validate([
+            'nombre'    => 'required|string|max:255',
+            'apellido'  => 'required|string|max:255',
+            'email'     => "required|email|unique:usuarios,email,{$paciente->id}",
+            'contacto'  => 'required|string|max:15',
+            'direccion' => 'required|string|max:255',
+            'genero' => 'required|in:masculino,femenino',
+
+        ]);
+
+        $usuario = $paciente->usuario;
+        $usuario->update([
+            'nombre'    => $request->nombre,
+            'apellido'  => $request->apellido,
+            'email'     => $request->email,
+            'contacto'  => $request->contacto,
+        ]);
+
+        $paciente->update([
+            'direccion' => $request->direccion,
+            'genero'    => $request->genero,
+        ]);
+
+        return redirect()->route('pacientes.index')->with('success', 'Paciente actualizado correctamente.');
+    }
+
     public function show(Paciente $paciente)
     {
         return view('pacientes.show', compact('paciente'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Paciente $paciente)
-    {
-        return view('pacientes.edit', compact('paciente'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Paciente $paciente)
-    {
-        $request->validate([
-            'cedula' => 'required | string | max:255',
-            'nombre' => 'required | string | max:255',
-            'apellido' => 'required | string | max:255',
-            'telefono' => 'required | string | max:255',
-            'direccion' => 'required | string | max:255',
-            'correoelectronico' => 'required | string | max:255',
-        ]);
-
-        $paciente->update($request->all());
-        return redirect()->route('pacientes.index')->with('success','Paciente actualizado satisfactoriamente');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Paciente $paciente)
     {
+        $paciente->usuario()->delete();
         $paciente->delete();
-        return redirect()->route('pacientes.index')->with('success','Paciente eliminado satisfactoriamente');
+
+        return redirect()->route('pacientes.index')->with('success', 'Paciente eliminado.');
     }
 }

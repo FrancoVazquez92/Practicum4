@@ -1,36 +1,19 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="container">
-    <h2>Editar Paciente</h2>
-    <form action="{{ route('pacientes.update', $paciente->id) }}" method="POST">
+<div class="container mx-auto px-4 max-w-lg">
+    <h1 class="text-2xl font-bold mb-4">Editar Paciente</h1>
+
+    <form action="{{ route('pacientes.update', $medico) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="cedula">Cedula</label>
-            <input type="text" class="form-control" id="cedula" name="cedula" value="{{ $paciente->cedula }}" required>
+
+        @include('pacientes._form', ['paciente' => $paciente])
+        
+        <div>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Actualizar</button>
+            <a href="{{ route('pacientes.index') }}" class="text-blue-700 hover:underline ml-2">Cancelar</a>
         </div>
-        <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ $paciente->nombre }}" required>
-        </div>
-        <div class="form-group">
-            <label for="apellido">Apellido</label>
-            <input type="text" class="form-control" id="apellido" name="apellido" value="{{ $paciente->apellido }}" required>
-        </div>
-        <div class="form-group">
-            <label for="telefono">Telefono</label>
-            <input type="text" class="form-control" id="telefono" name="telefono" value="{{ $paciente->telefono }}" required>
-        </div>
-        <div class="form-group">
-            <label for="direccion">Direccion</label>
-            <input type="text" class="form-control" id="direccion" name="direccion" value="{{ $paciente->direccion }}" required>
-        </div>
-        <div class="form-group">
-            <label for="correoelectronico">Correo electronico</label>
-            <input type="text" class="form-control" id="correoelectronico" name="correoelectronico" value="{{ $paciente->correoelectronico }}" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Actualizar</button>
     </form>
 </div>
 @endsection

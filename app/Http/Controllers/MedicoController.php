@@ -2,80 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rol;
 use App\Models\Medico;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class MedicoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $medicos = Medico::all();
+        $medicos = Medico::with('usuario.rol')->get(); 
         return view('medicos.index', compact('medicos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('medicos.create');     
+        $roles = Rol::where('nombre', 'medico')->firstOrFail();
+        return view('medicos.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $roles = Rol::where('nombre', 'medico')->firstOrFail();
+
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
+            'nombre'       => 'required|string|max:255',
+            'apellido'     => 'required|string|max:255',
+            'email'        => 'required|email|unique:usuarios,email',
+            'contacto'     => 'required|string|max:15',
+            'password'     => 'required|string|confirmed|min:6',
             'especialidad' => 'required|string|max:255',
         ]);
 
-        Medico::create($request->all());
-        return redirect()->route('medicos.index')->with('success','Medico creado satisfactoriamente');    
+        // Crear el usuario base
+        $usuario = Usuario::create([
+            'nombre'    => $request->nombre,
+            'apellido'  => $request->apellido,
+            'email'     => $request->email,
+            'contacto'  => $request->contacto,
+            'password'  => Hash::make($request->password),
+            'rol_id'    => $roles->id,
+        ]);
+
+        // Crear el médico referenciando al usuario
+        Medico::create([
+            'id'           => $usuario->id,
+            'especialidad' => $request->especialidad,
+        ]);
+
+        return redirect()->route('medicos.index')->with('success', 'Médico creado con éxito.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Medico $medico)
-    {
-        return view('medicos.show', compact('medico')); 
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Medico $medico)
     {
-        return view('medicos.edit', compact('medico'));
+        $roles = Rol::where('nombre', 'medico')->first();
+        $usuario = $medico->usuario;
+        return view('medicos.edit', compact('medico', 'usuario', 'roles'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Medico $medico)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
+            'nombre'       => 'required|string|max:255',
+            'apellido'     => 'required|string|max:255',
+            'email'        => "required|email|unique:usuarios,email,{$medico->id}",
+            'contacto'     => 'required|string|max:15',
             'especialidad' => 'required|string|max:255',
         ]);
 
-        $medico->update($request->all());
-        return redirect()->route('medicos.index')->with('success','Medico actualizados satisfactoriamente');
+        $usuario = $medico->usuario;
+        $usuario->update([
+            'nombre'    => $request->nombre,
+            'apellido'  => $request->apellido,
+            'email'     => $request->email,
+            'contacto'  => $request->contacto,
+            'rol_id'    => $request->rol_id,
+        ]);
+
+        $medico->update([
+            'especialidad' => $request->especialidad,
+        ]);
+
+        return redirect()->route('medicos.index')->with('success', 'Médico actualizado correctamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Medico $medico)
+    public function show(Medico $medico)
     {
-        $medico->delete();
-        return redirect()->route('medicos.index')->with('success','Medico eliminado satisfactoriamente');
+        return view('medicos.show', compact('medico'));
     }
 }
