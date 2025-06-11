@@ -3,12 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\CitaMedicaController;
 use App\Http\Controllers\AtencionMedicaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SecretariaController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,10 +51,7 @@ Route::resource('citasmedicas', CitaMedicaController::class);
 Route::resource('atencionmedicas', AtencionMedicaController::class);
 Route::resource('secretarias', SecretariaController::class);
 Route::resource('rols', RolController::class);
-
-
-//Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles']);
-
-
-//  Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+Route::resource('administradores', AdministradorController::class)->parameters([
+    'administradores' => 'administrador'
+]);
 

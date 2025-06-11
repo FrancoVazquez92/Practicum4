@@ -25,6 +25,7 @@
 
             <ul class="navbar-nav flex-row">
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('home') }}">Inicio</a></li>
+                <li class="nav-item me-3"><a class="nav-link" href="{{ route('administradores.index') }}">Administradores</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('pacientes.index') }}">Pacientes</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('medicos.index') }}">Doctores</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="{{ route('secretarias.index') }}">Secretarias</a></li>
