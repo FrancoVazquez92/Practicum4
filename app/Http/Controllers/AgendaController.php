@@ -1,65 +1,82 @@
-<?php
+<?php   
 
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Medico;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AgendaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Medico $medico)
     {
-        $patients = Agenda::all();
-        return view('agenda.index', compact('agenda'));
+        return view('agendas.index', compact('medico'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Medico $medico)
     {
+        return view('agendas.create', compact('medico'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request, Medico $medico)
     {
-       
+        $request->validate([
+            'dia'         => 'required|date',
+            'hora_inicio' => 'required|date_format:H:i',
+            'hora_fin'    => 'required|date_format:H:i|after:hora_inicio',
+        ]);
+
+        Agenda::create([
+            'medico_id'   => $medico->id,
+            'dia'         => $request->dia,
+            'hora_inicio' => $request->hora_inicio,
+            'hora_fin'    => $request->hora_fin,
+        ]);
+
+        return redirect()->route('agendas.index', $medico)->with('success', 'Disponibilidad registrada.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Agenda $patient)
+    public function destroy($id)
     {
-        return view('agenda.index', compact('agenda'));
+        $agenda = Agenda::findOrFail($id);
+        $medicoId = $agenda->medico_id;
+        $agenda->delete();
+
+        return redirect()->route('agendas.index', $medicoId)->with('success', 'Disponibilidad eliminada.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Agenda $patient)
+    public function fechasDisponibles($medicoId)
     {
-        //
+        $fechas = Agenda::where('medico_id', $medicoId)
+            ->orderBy('dia')
+            ->pluck('dia');
+
+        return response()->json($fechas);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Agenda $patient)
+    public function horariosDisponibles($medicoId, $fecha)
     {
-        //
+        // Buscar la agenda del médico para esa fecha
+        $agenda = Agenda::where('medico_id', $medicoId)
+                        ->whereDate('dia', $fecha)
+                        ->first();
+
+        if (!$agenda) {
+            return response()->json([]);
+        }
+
+        $horaInicio = Carbon::parse($agenda->hora_inicio);
+        $horaFin = Carbon::parse($agenda->hora_fin);
+        $horarios = [];
+
+        while ($horaInicio < $horaFin) {
+            $horarios[] = $horaInicio->format('H:i');
+            $horaInicio->addMinutes(30);
+        }
+
+        return response()->json($horarios);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Agenda $patient)
-    {
-        //
-    }
+
 }

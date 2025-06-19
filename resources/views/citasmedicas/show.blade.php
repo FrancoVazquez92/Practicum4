@@ -10,7 +10,13 @@
     <p><strong>Fecha:</strong> {{ $citas->fecha }}</p>
     <p><strong>Hora:</strong> {{ $citas->hora }}</p>
     
-    <a href="{{ route('citasmedicas.index') }}" class="btn btn-secondary">Volver</a>
+    <a href="{{ Auth::user()->rol->nombre == 'Medico' 
+        ? route('citasmedicas.medico', $citas->medico_id) 
+        : route('citasmedicas.index', $citas->paciente_id) }}" 
+    class="btn btn-secondary mt-3">
+        Volver
+    </a>
+
 </div>
 
 @endsection

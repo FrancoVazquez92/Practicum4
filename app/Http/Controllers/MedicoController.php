@@ -91,4 +91,12 @@ class MedicoController extends Controller
     {
         return view('medicos.show', compact('medico'));
     }
+    public function porEspecialidad($especialidad)
+    {
+        $medicos = Medico::with('usuario')
+                    ->where('especialidad', $especialidad)
+                    ->get();
+
+        return response()->json($medicos);
+    }
 }

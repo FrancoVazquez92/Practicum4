@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Agenda extends Model
 {
-    use HasFactory;
+    protected $fillable = ['medico_id', 'dia', 'hora_inicio', 'hora_fin'];
 
-    protected $fillable = [
-        'idMedico',
-        'Disponibilidad',
-        'Horario'
-    ];
+    public function medico()
+    {
+        return $this->belongsTo(Medico::class);
+    }
 }
+
