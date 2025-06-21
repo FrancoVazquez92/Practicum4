@@ -12,6 +12,8 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\GerenciaController;
 use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\NotificacionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -75,3 +77,5 @@ Route::get('/medicos/{medico}/citas-asignadas', [CitaMedicaController::class, 'c
 Route::get('/medicos/por-especialidad/{especialidad}', [MedicoController::class, 'porEspecialidad']);
 Route::get('/agenda/fechas-disponibles/{medico}', [AgendaController::class, 'fechasDisponibles']);
 Route::get('/agenda/horarios-disponibles/{medicoId}/{fecha}', [AgendaController::class, 'horariosDisponibles']);
+
+Route::get('/notificaciones/marcar/{id}', [NotificacionController::class, 'marcarComoLeida'])->name('notificaciones.marcar');

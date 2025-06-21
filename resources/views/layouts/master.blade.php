@@ -17,11 +17,10 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 
-<body class="d-flex" style="background-image: url('/images/fondo.png'); background-size: cover; background-position: center; min-height: 100vh;">
+<body style="background-color: white; background-size: cover; background-position: center; min-height: 100vh;">
 
     <!-- Sidebar -->
-<!-- Sidebar -->
-<nav class="bg-primary bg-opacity-75 text-white p-4" style="min-width: 250px; height: 100vh; position: fixed; overflow-y: auto; max-height: 100vh; scroll-behavior: smooth;">
+    <nav class="bg-primary bg-opacity-75 text-white p-4" style="width: 250px; height: 100vh; position: fixed; overflow-y: auto;">
         <div class="mb-4">
             <h1 class="fs-5 fw-bold">Hospital Isidro Ayora</h1>
         </div>
@@ -42,53 +41,76 @@
                 <a class="nav-link text-white w-100 text-start bg-transparent border-0" data-bs-toggle="collapse" data-bs-target="#submenuAgenda" aria-expanded="false" aria-controls="submenuAgenda">
                     📆 Agenda Médica
                 </a>
-                <div class="" id="submenuAgenda">
+                <div id="submenuAgenda">
                     <ul class="nav flex-column">
                         <li class="nav-item mb-2">
                             <a class="nav-link text-white" href="{{ route('agendas.index', $usuarioId) }}">🕒 Gestionar disponibilidad</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('citasmedicas.medico', Auth::id()) }}">📋 Citas asignadas</a>
+                            <a class="nav-link text-white" href="{{ route('citasmedicas.medico', $usuarioId) }}">📋 Citas asignadas</a>
                         </li>
                     </ul>
                 </div>
             </li>
         </ul>
-
-        @auth
-            <hr class="bg-white">
-            <div class="mt-3">
-                <strong>{{ Auth::user()->nombre }}</strong>
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link text-white" href="{{ route('profile.show') }}">👤 Perfil</a></li>
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-link nav-link text-white p-0">🚪 Cerrar sesión</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        @endauth
-
-        @guest
-            <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link text-white" href="{{ route('login') }}">🔐 Iniciar sesión</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ route('register') }}">📝 Registrarse</a></li>
-            </ul>
-        @endguest
     </nav>
 
+    <!-- Topbar -->
+    <header class="bg-white shadow-sm px-4 py-2 d-flex justify-content-between align-items-center" style="position: fixed; top: 0; left: 250px; right: 0; z-index: 1040;">
+        <div>
+            <h5 class="mb-0 text-primary fw-bold">Panel de Usuario</h5>
+        </div>
+        <div class="d-flex align-items-center">
+            @auth
+                <div class="bg-white shadow-sm p-3 d-flex justify-content-end align-items-center" style="margin-left: 250px;">
+                <div class="dropdown me-3">
+                    <button class="btn btn-light position-relative" type="button" id="notificacionesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        🔔
+                        @if (Auth::user()->unreadNotifications->count())
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ Auth::user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificacionesDropdown">
+                        @forelse(Auth::user()->unreadNotifications as $noti)
+                            <li class="dropdown-item small">
+                                <a href="{{ route('notificaciones.marcar', $noti->id) }}" class="text-decoration-none text-dark">
+                                    {{ $noti->data['mensaje'] }} <br>
+                                    <small class="text-muted">{{ $noti->data['fecha'] }} a las {{ $noti->data['hora'] }}</small>
+                                </a>
+                            </li>
+                        @empty
+                            <li class="dropdown-item text-muted">Sin notificaciones nuevas</li>
+                        @endforelse
+
+                    </ul>
+                </div>
+
+                <strong class="me-3">{{ Auth::user()->nombre }}</strong>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-dark btn-sm">Cerrar sesión</button>
+                </form>
+           
+            @endauth
+            @guest
+                <a href="{{ route('login') }}" class="btn btn-primary btn-sm me-2">Iniciar sesión</a>
+                <a href="{{ route('register') }}" class="btn btn-outline-primary btn-sm">Registrarse</a>
+            @endguest
+        </div>
+    </header>
+
     <!-- Contenido principal -->
-    <div class="flex-grow-1" style="margin-left: 250px;">
-        <div class="container mt-4 p-4 bg-white/80 rounded shadow">
+    <main style="margin-left: 250px; padding-top: 70px;">
+        <div class="container p-4 bg-white/80 rounded shadow mt-3">
             @yield('content')
         </div>
 
         <footer class="bg-white/80 text-center text-dark py-3 mt-4">
             &copy; {{ date('Y') }} Hospital Isidro Ayora - Loja
         </footer>
-    </div>
+    </main>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

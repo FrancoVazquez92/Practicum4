@@ -8,6 +8,8 @@ use App\Models\Medico;
 use App\Models\Agenda;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Notifications\CitaCreada;
+use App\Notifications\CitaModificada;
 
 class CitaMedicaController extends Controller
 {
@@ -43,7 +45,13 @@ class CitaMedicaController extends Controller
         $data = $request->all();
         $data['paciente_id'] = $paciente->id;
 
-        CitaMedica::create($data);
+        $cita = CitaMedica::create($data);
+
+        // Notificar al médico
+        $medico = $cita->medico;                   // Accedo al médico asignado
+        $usuarioMedico = $medico->usuario;         // Accedo al usuario del médico
+        $usuarioMedico->notify(new CitaCreada($cita)); // Envío la notificación con los datos de la cita
+
 
         return redirect()->route('citasmedicas.index', $paciente)
                         ->with('success', 'Cita médica creada exitosamente.');
@@ -75,24 +83,28 @@ class CitaMedicaController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    
     public function update(Request $request, $id)
     {
         $cita = CitaMedica::findOrFail($id);
-
         $cita->update($request->all());
 
-        // Verifica el rol del usuario autenticado
         $rol = Auth::user()->rol->nombre;
 
+        $usuarioMedico = $cita->medico->usuario;
+        $usuarioPaciente = $cita->paciente->usuario;
+
         if ($rol === 'Medico') {
-            return redirect()
-                ->route('citasmedicas.medico', $cita->medico_id)
-                ->with('success', 'Cita médica actualizada satisfactoriamente.');
+            // El médico edita → notificar al paciente
+            $usuarioPaciente->notify(new CitaModificada($cita, 'editada', 'Medico'));
+        } else {
+            // El paciente edita → notificar al médico
+            $usuarioMedico->notify(new CitaModificada($cita, 'editada', 'Paciente'));
         }
 
-        return redirect()
-            ->route('citasmedicas.index', $cita->paciente_id)
-            ->with('success', 'Cita médica actualizada satisfactoriamente.');
+        return $rol === 'Medico'
+            ? redirect()->route('citasmedicas.medico', $cita->medico_id)->with('success', 'Cita actualizada.')
+            : redirect()->route('citasmedicas.index', $cita->paciente_id)->with('success', 'Cita actualizada.');
     }
 
 
@@ -101,19 +113,31 @@ class CitaMedicaController extends Controller
      */
     public function destroy($id)
     {
-        // Buscar la cita médica por ID
         $cita = CitaMedica::findOrFail($id);
 
-        // Opcional: guardar el paciente para la redirección
-        $pacienteId = $cita->paciente_id;
+        $rol = Auth::user()->rol->nombre;
 
-        // Eliminar la cita médica
+        $usuarioMedico = $cita->medico->usuario;
+        $usuarioPaciente = $cita->paciente->usuario;
+
+        // Notificar antes de eliminar
+        if ($rol === 'Medico') {
+            $usuarioPaciente->notify(new CitaModificada($cita, 'eliminada', 'Medico'));
+        } else {
+            $usuarioMedico->notify(new CitaModificada($cita, 'eliminada', 'Paciente'));
+        }
+
+        $pacienteId = $cita->paciente_id;
+        $medicoId = $cita->medico_id;
+
         $cita->delete();
 
-        // Redirigir a la lista de citas del paciente con mensaje de éxito
-        return redirect()->route('citasmedicas.index', $pacienteId)
-                        ->with('success', 'Cita médica eliminada correctamente.');
+        return $rol === 'Medico'
+            ? redirect()->route('citasmedicas.medico', $medicoId)->with('success', 'Cita eliminada.')
+            : redirect()->route('citasmedicas.index', $pacienteId)->with('success', 'Cita eliminada.');
     }
+
+
 
     public function detalles($id)
     {
@@ -126,12 +150,12 @@ class CitaMedicaController extends Controller
     }
     public function citasDelMedico(Medico $medico)
     {
+        
         $citas = CitaMedica::where('medico_id', $medico->id)
-                    ->with(['paciente.usuario'])
-                    ->orderBy('fecha')
-                    ->orderBy('hora')
-                    ->get();
-
+            ->with(['paciente.usuario'])
+            ->orderBy('fecha')
+            ->orderBy('hora')
+            ->get();
         return view('citasmedicas.medico', compact('citas', 'medico'));
     }
 }
