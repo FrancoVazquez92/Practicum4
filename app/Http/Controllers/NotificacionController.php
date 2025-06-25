@@ -26,6 +26,8 @@ class NotificacionController extends Controller
                 } elseif ($rol === 'Paciente') {
                     return redirect()->route('citasmedicas.index', $data['paciente_id']);
                 }
+            }elseif (isset($data['tipo']) && $data['tipo'] === 'historial') {
+                return redirect()->route('historial.index', $data['paciente_id']);
             }
         }
 

@@ -83,5 +83,4 @@ Route::get('/notificaciones/marcar/{id}', [NotificacionController::class, 'marca
 
 Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles']);
 
-Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'historialPaciente'])
-    ->name('historial.index');
+Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'historialPaciente'])->name('historial.index');

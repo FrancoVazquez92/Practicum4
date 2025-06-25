@@ -7,6 +7,7 @@ use App\Models\CitaMedica;
 use App\Models\Paciente;
 use App\Models\Medico;
 use Illuminate\Http\Request;
+use App\Notifications\HistorialActualizado;
 
 class AtencionMedicaController extends Controller
 {
@@ -34,7 +35,10 @@ class AtencionMedicaController extends Controller
     public function store(Request $request)
     {      
 
-        AtencionMedica::create($request->all());
+        $atencion = AtencionMedica::create($request->all());
+
+        $pacienteUsuario = $atencion->cita->paciente->usuario;
+        $pacienteUsuario->notify(new HistorialActualizado($atencion));
 
         return redirect()->route('atencionmedicas.index')->with('success', 'Atención médica registrada exitosamente');
     }
@@ -70,6 +74,10 @@ class AtencionMedicaController extends Controller
     {
         $atencion = AtencionMedica::findOrFail($id);
         $atencion->update($request->all());
+
+        $pacienteUsuario = $atencion->cita->paciente->usuario;
+        $pacienteUsuario->notify(new HistorialActualizado($atencion));
+
         return redirect()->route('atencionmedicas.index')->with('success','Atencion Medica actualiza satisfactoriamente');
     }
 
@@ -80,6 +88,10 @@ class AtencionMedicaController extends Controller
     {
         $atencion = AtencionMedica::findOrFail($id); // ✅ Esto busca en la tabla correcta
         $atencion->delete();
+
+        $pacienteUsuario = $atencion->cita->paciente->usuario;
+        $pacienteUsuario->notify(new HistorialActualizado($atencion));
+
         return redirect()->route('atencionmedicas.index')->with('success', 'Atención médica eliminada correctamente.');
     }
 }
