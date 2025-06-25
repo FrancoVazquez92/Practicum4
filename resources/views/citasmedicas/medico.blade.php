@@ -14,6 +14,7 @@
         <table class="table table-bordered table-striped bg-white">
             <thead class="table-primary">
                 <tr>
+                    <th>Cita #</th>
                     <th>Paciente</th>
                     <th>Fecha</th>
                     <th>Hora</th>
@@ -23,6 +24,7 @@
             <tbody>
                 @foreach($citas as $cita)
                     <tr>
+                        <td>{{ $cita->id }}</td>
                         <td>{{ $cita->paciente->usuario->nombre }} {{ $cita->paciente->usuario->apellido }}</td>
                         <td>{{ $cita->fecha }}</td>
                         <td>{{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}</td>

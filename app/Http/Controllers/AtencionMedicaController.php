@@ -13,7 +13,7 @@ class AtencionMedicaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Medico $medico)
     {
         $atenciones = AtencionMedica::all(); 
         return view('atencionmedicas.index', compact('atenciones'));
@@ -24,11 +24,8 @@ class AtencionMedicaController extends Controller
      */
     public function create()
     {
-        $citas = CitaMedica::all();  // Obtener las citas médicas disponibles
-        $pacientes = Paciente::all();  // Obtener los pacientes disponibles
-        $medicos = Medico::all();  // Obtener los médicos disponibles
-
-        return view('atencionmedicas.create', compact('citas', 'pacientes', 'medicos'));
+        $citas = CitaMedica::with(['paciente.usuario'])->get(); // Incluyo los datos del usuario del paciente
+        return view('atencionmedicas.create', compact('citas'));
     }
 
     /**
@@ -81,8 +78,8 @@ class AtencionMedicaController extends Controller
      */
     public function destroy($id)
     {
-        $atencion = CitaMedica::findOrFail($id);
+        $atencion = AtencionMedica::findOrFail($id); // ✅ Esto busca en la tabla correcta
         $atencion->delete();
-        return redirect()->route('atencionmedicas.index')->with('success', 'Atencion médica eliminada correctamente.');
+        return redirect()->route('atencionmedicas.index')->with('success', 'Atención médica eliminada correctamente.');
     }
 }

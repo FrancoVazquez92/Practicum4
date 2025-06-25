@@ -10,12 +10,12 @@ class AtencionMedica extends Model
     use HasFactory;
 
     protected $fillable = [
-        'cita_medica_id',
-        'paciente_nombre',
-        'medico_nombre',
         'diagnostico',
+        'enfermedad',
+        'cita_medica_id',        
+        'medico_nombre',
+        'paciente_nombre',
         'tratamiento',
-        'receta',
     ];
 
     public function citaMedica()
@@ -30,4 +30,9 @@ class AtencionMedica extends Model
     {
         return $this->belongsTo(Medico::class);
     }
+    public function cita()
+    {
+        return $this->belongsTo(CitaMedica::class, 'cita_medica_id');
+    }
+
 }

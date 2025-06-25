@@ -79,3 +79,5 @@ Route::get('/agenda/fechas-disponibles/{medico}', [AgendaController::class, 'fec
 Route::get('/agenda/horarios-disponibles/{medicoId}/{fecha}', [AgendaController::class, 'horariosDisponibles']);
 
 Route::get('/notificaciones/marcar/{id}', [NotificacionController::class, 'marcarComoLeida'])->name('notificaciones.marcar');
+
+Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles']);

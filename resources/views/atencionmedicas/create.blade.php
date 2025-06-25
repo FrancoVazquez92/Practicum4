@@ -12,7 +12,9 @@
         <select id="cita_medica_id" name="cita_medica_id" class="form-select">
             <option value="" selected disabled>Seleccione una cita</option>
             @foreach ($citas as $cita)
-                <option value="{{ $cita->id }}">{{ $cita->id }}</option>
+                <option value="{{ $cita->id }}">
+                    Cita #{{ $cita->id }} - {{ $cita->paciente->usuario->nombre }} {{ $cita->paciente->usuario->apellido }} ({{ $cita->fecha }} - {{ $cita->hora }})
+                </option>
             @endforeach
         </select>
     </div>
@@ -34,21 +36,18 @@
         <label for="diagnostico" class="form-label">Diagnóstico</label>
         <input type="text" name="diagnostico" id="diagnostico" class="form-control" required>
     </div>
+    
+    <!-- Enfermedad -->
+    <div class="mb-3">
+        <label for="enfermedad" class="form-label">Enfermedad</label>
+        <input type="text" name="enfermedad" id="enfermedad" class="form-control">
+    </div>
+
 
     <!-- Tratamiento -->
     <div class="mb-3">
         <label for="tratamiento" class="form-label">Tratamiento</label>
-        <select name="tratamiento" id="tratamiento" class="form-select" required>
-            <option value="medicamento">Medicamento</option>
-            <option value="cirugia">Cirugía</option>
-            <option value="terapia">Terapia</option>
-        </select>
-    </div>
-
-    <!-- Receta -->
-    <div class="mb-3">
-        <label for="receta" class="form-label">Receta</label>
-        <input type="text" name="receta" id="receta" class="form-control">
+        <input type="text" name="tratamiento" id="tratamiento" class="form-control" required>
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar</button>

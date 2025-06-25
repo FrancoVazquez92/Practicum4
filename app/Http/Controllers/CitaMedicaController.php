@@ -138,16 +138,6 @@ class CitaMedicaController extends Controller
     }
 
 
-
-    public function detalles($id)
-    {
-        $cita = CitaMedica::with(['paciente', 'medico'])->findOrFail($id);
-
-        return response()->json([
-            'paciente' => $cita->paciente,
-            'medico' => $cita->medico,
-        ]);
-    }
     public function citasDelMedico(Medico $medico)
     {
         
@@ -158,4 +148,26 @@ class CitaMedicaController extends Controller
             ->get();
         return view('citasmedicas.medico', compact('citas', 'medico'));
     }
+
+    public function detalles($id)
+    {
+        $cita = CitaMedica::with(['paciente.usuario', 'medico.usuario'])->find($id);
+
+        if (!$cita) {
+            return response()->json(['error' => 'Cita no encontrada'], 404);
+        }
+
+        return response()->json([
+            'paciente' => [
+                'nombre' => $cita->paciente->usuario->nombre,
+                'apellido' => $cita->paciente->usuario->apellido,
+            ],
+            'medico' => [
+                'nombre' => $cita->medico->usuario->nombre,
+                'apellido' => $cita->medico->usuario->apellido,
+            ]
+        ]);
+    }
+
+
 }
