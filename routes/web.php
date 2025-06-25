@@ -13,6 +13,7 @@ use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\GerenciaController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\HistorialMedicoController;
 
 
 /*
@@ -81,3 +82,6 @@ Route::get('/agenda/horarios-disponibles/{medicoId}/{fecha}', [AgendaController:
 Route::get('/notificaciones/marcar/{id}', [NotificacionController::class, 'marcarComoLeida'])->name('notificaciones.marcar');
 
 Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles']);
+
+Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'historialPaciente'])
+    ->name('historial.index');

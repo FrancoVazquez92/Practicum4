@@ -37,6 +37,7 @@
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('rols.index') }}">⚙️ Roles</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('citasmedicas.index', $usuarioId) }}">📅 Citas Médicas</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('atencionmedicas.index') }}">📝 Atención Médica</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('historial.index', $usuarioId) }}">📝 Historial Medico</a></li>
             <li class="nav-item mb-2">
                 <a class="nav-link text-white w-100 text-start bg-transparent border-0" data-bs-toggle="collapse" data-bs-target="#submenuAgenda" aria-expanded="false" aria-controls="submenuAgenda">
                     📆 Agenda Médica
