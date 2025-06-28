@@ -14,6 +14,7 @@ use App\Http\Controllers\GerenciaController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\HistorialMedicoController;
+use App\Http\Controllers\DashboardController;
 
 
 /*
@@ -84,3 +85,7 @@ Route::get('/notificaciones/marcar/{id}', [NotificacionController::class, 'marca
 Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalles']);
 
 Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'historialPaciente'])->name('historial.index');
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/dashboard/datos', [DashboardController::class, 'datos'])->name('dashboard.datos');

@@ -29,6 +29,7 @@
 
         <ul class="nav flex-column">
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('home') }}">🏠 Inicio</a></li>
+            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('dashboard.index') }}">📊 Dashboards</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('administradores.index') }}">👤 Administradores</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('pacientes.index') }}">🧑 Pacientes</a></li>
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('medicos.index') }}">🩺 Doctores</a></li>
