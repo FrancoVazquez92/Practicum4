@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Hash;
 
 class SecretariaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_secretarias');
+    }
+
     public function index()
     {
         $secretarias = Secretaria::with('usuario.rol')->get(); 

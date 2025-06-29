@@ -20,7 +20,10 @@
                     name="permisos[]"
                     value="{{ $permiso }}"
                     class="form-checkbox text-blue-600"
-                    {{ isset($permisosSeleccionados) && in_array($permiso, $permisosSeleccionados) ? 'checked' : '' }}>
+                    @if(is_array(old('permisos', $permisosSeleccionados ?? [])) && in_array($permiso, old('permisos', $permisosSeleccionados ?? [])))
+                        checked
+                    @endif
+                >
                 <span class="ml-2">{{ $etiqueta }}</span>
             </label>
         @endforeach
@@ -30,3 +33,4 @@
 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
     {{ isset($rol) ? 'Actualizar' : 'Guardar' }}
 </button>
+<a href="{{ route('rols.index') }}" class="text-blue-700 hover:underline ml-2">Cancelar</a>

@@ -24,10 +24,11 @@
                 <td class="border px-4 py-2">{{ $rol->descripcion }}</td>
                 <td class="border px-4 py-2">{{ $rol->permisos }}</td>
                 <td class="border px-4 py-2">
-                    <a href="{{ route('rols.edit', $rol) }}" class="text-blue-600">Editar</a>
+                    <a href="{{ route('rols.show', $rol->id) }}" class="btn btn-sm btn-info">Ver</a>
+                    <a href="{{ route('rols.edit', $rol) }}" class="btn btn-sm btn-warning">Editar</a>
                     <form action="{{ route('rols.destroy', $rol) }}" method="POST" class="inline">
                         @csrf @method('DELETE')
-                        <button class="text-red-600 ml-2" onclick="return confirm('¿Eliminar este rol?')">Eliminar</button>
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este rol?')">Eliminar</button>
                     </form>
                 </td>
             </tr>

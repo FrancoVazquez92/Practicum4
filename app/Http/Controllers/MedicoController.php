@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Hash;
 
 class MedicoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_doctores');
+    }
+
     public function index()
     {
         $medicos = Medico::with('usuario.rol')->get(); 

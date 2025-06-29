@@ -13,9 +13,13 @@ use App\Notifications\CitaModificada;
 
 class CitaMedicaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+{
+    $this->middleware('auth');
+    $this->middleware('permiso:gestionar_citas|gestionar_citasAsignadas'); 
+}
+
+
     public function index(Paciente $paciente)
     {
         return view('citasmedicas.index', compact('paciente'));

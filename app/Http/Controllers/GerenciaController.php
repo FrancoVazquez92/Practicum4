@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Hash;
 
 class GerenciaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_gerencia');
+    }
+
     public function index()
     {
         $gerencias = Gerencia::with('usuario.rol')->get(); 

@@ -11,9 +11,13 @@ use App\Notifications\HistorialActualizado;
 
 class AtencionMedicaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_atenciones');
+    }
+
     public function index(Medico $medico)
     {
         $atenciones = AtencionMedica::all(); 

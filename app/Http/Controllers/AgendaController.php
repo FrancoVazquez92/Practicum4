@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class AgendaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_disponibilidad');
+    }
     public function index(Medico $medico)
     {
         return view('agendas.index', compact('medico'));

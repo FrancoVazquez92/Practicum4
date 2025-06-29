@@ -26,34 +26,46 @@
         </div>
 
         @php $usuarioId = Auth::user()->id ?? null; @endphp
+        @php $permisos = json_decode(Auth::user()->rol->permisos ?? '[]', true); @endphp
 
         <ul class="nav flex-column">
             <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('home') }}">🏠 Inicio</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('dashboard.index') }}">📊 Dashboards</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('administradores.index') }}">👤 Administradores</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('pacientes.index') }}">🧑 Pacientes</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('medicos.index') }}">🩺 Doctores</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('secretarias.index') }}">📋 Secretarias</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('gerencias.index') }}">🏢 Gerencia</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('rols.index') }}">⚙️ Roles</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('citasmedicas.index', $usuarioId) }}">📅 Citas Médicas</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('atencionmedicas.index') }}">📝 Atención Médica</a></li>
-            <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('historial.index', $usuarioId) }}">📝 Historial Medico</a></li>
-            <li class="nav-item mb-2">
-                <a class="nav-link text-white w-100 text-start bg-transparent border-0" data-bs-toggle="collapse" data-bs-target="#submenuAgenda" aria-expanded="false" aria-controls="submenuAgenda">
-                    📆 Agenda Médica
-                </a>
-                <div id="submenuAgenda">
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2">
-                            <a class="nav-link text-white" href="{{ route('agendas.index', $usuarioId) }}">🕒 Gestionar disponibilidad</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('citasmedicas.medico', $usuarioId) }}">📋 Citas asignadas</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
+            @if(in_array('ver_dashboard', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('dashboard.index') }}">📊 Dashboards</a></li>
+            @endif
+            @if(in_array('gestionar_administradores', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('administradores.index') }}">👤 Administradores</a></li>
+            @endif
+            @if(in_array('gestionar_pacientes', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('pacientes.index') }}">🧑 Pacientes</a></li>
+            @endif
+            @if(in_array('gestionar_doctores', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('medicos.index') }}">🩺 Doctores</a></li>
+            @endif
+            @if(in_array('gestionar_secretarias', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('secretarias.index') }}">📋 Secretarias</a></li>
+            @endif
+            @if(in_array('gestionar_gerencia', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('gerencias.index') }}">🏢 Gerencia</a></li>
+            @endif
+            @if(in_array('gestionar_roles', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('rols.index') }}">⚙️ Roles</a></li>
+            @endif
+            @if(in_array('gestionar_citas', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('citasmedicas.index', $usuarioId) }}">📅 Citas Médicas</a></li>
+            @endif
+            @if(in_array('gestionar_atenciones', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('atencionmedicas.index') }}">📝 Atención Médica</a></li>
+            @endif
+            @if(in_array('ver_historial', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('historial.index', $usuarioId) }}">📝 Historial Medico</a></li>
+            @endif
+            @if(in_array('gestionar_disponibilidad', $permisos))
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('agendas.index', $usuarioId) }}">🕒 Gestionar disponibilidad</a></li>
+            @endif
+            @if(in_array('gestionar_citasAsignadas', $permisos))
+                <li class="nav-item"><a class="nav-link text-white" href="{{ route('citasmedicas.medico', $usuarioId) }}">📋 Citas asignadas</a></li>
+            @endif
         </ul>
     </nav>
 

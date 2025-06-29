@@ -6,13 +6,19 @@ use App\Models\Rol;
 use App\Models\Administrador;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdministradorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_administradores');
+    }
+
     public function index()
     {
-        
         $administradores = Administrador::with('usuario.rol')->get(); 
         return view('administradores.index', compact('administradores'));
         
