@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\CitaMedica;
-use App\Models\Usuario;
+use App\Models\Agenda;
 use App\Models\Medico;
 use App\Models\Paciente;
 
@@ -20,6 +20,34 @@ class DashboardController extends Controller
 
     public function index()
     {
+        
+        $alertas = [];
+
+        $totalCitasHoy = CitaMedica::whereDate('fecha', today())->count();
+
+        if ($totalCitasHoy == 0) {
+            $alertas[] = "🔴 Atención: Hay $totalCitasHoy citas programadas para hoy.";
+        }
+        
+        $hoy = Carbon::today();
+        $proximosDias = Carbon::today()->addDays(1);
+
+        // Verifico si hay registros en la tabla de agenda médica en los próximos días
+        $disponibilidadActiva = Agenda::whereBetween('dia', [$hoy, $proximosDias])->exists();
+
+        if (!$disponibilidadActiva) {
+            $alertas[] = "⚠️ No hay disponibilidad médica registrada. Los pacientes no podrán agendar citas.";
+        }
+
+        $inicioSemana = Carbon::now()->startOfWeek(); // lunes
+        $finSemana = Carbon::now()->endOfWeek();     // domingo
+
+        $nuevosPacientesSemana = Paciente::whereBetween('created_at', [$inicioSemana, $finSemana])->count();
+
+        if ($nuevosPacientesSemana > 0) {
+            $alertas[] = "👥 Se han registrado $nuevosPacientesSemana nuevos pacientes esta semana.";
+        }
+
         $citasPorMes = CitaMedica::selectRaw('MONTH(fecha) as mes, COUNT(*) as total')
             ->groupBy('mes')
             ->orderBy('mes')
@@ -31,10 +59,11 @@ class DashboardController extends Controller
 
         return view('dashboard.index', [
             'totalCitas' => CitaMedica::count(),
-            'citasHoy' => CitaMedica::whereDate('fecha', today())->count(),
+            'citasHoy' => $totalCitasHoy,
             'pacientes' => Paciente::count(),
             'medicos' => Medico::count(),
-            'citasPorMes' => $citasPorMes
+            'citasPorMes' => $citasPorMes,
+            'alertas' => $alertas,
         ]);
     }
 }

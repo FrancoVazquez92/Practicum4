@@ -4,6 +4,14 @@
 <div class="container">
     <h1>📊 Dashboard Hospital</h1>
 
+    @if (!empty($alertas))
+        @foreach ($alertas as $alerta)
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ $alerta }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        @endforeach
+    @endif
     <div class="row text-center my-4">
         <div class="col-md-3">
             <div class="card shadow">
@@ -79,8 +87,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
-
-
-
 @endsection
