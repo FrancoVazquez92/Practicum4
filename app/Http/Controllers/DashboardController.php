@@ -9,6 +9,7 @@ use App\Models\CitaMedica;
 use App\Models\Agenda;
 use App\Models\Medico;
 use App\Models\Paciente;
+use App\Models\AtencionMedica;
 
 class DashboardController extends Controller
 {
@@ -47,6 +48,9 @@ class DashboardController extends Controller
         if ($nuevosPacientesSemana > 0) {
             $alertas[] = "👥 Se han registrado $nuevosPacientesSemana nuevos pacientes esta semana.";
         }
+
+        $atencionesSemana = AtencionMedica::whereBetween('created_at', [$inicioSemana, $finSemana])->count();
+        $alertas[] = "👥 Se han registrado $atencionesSemana nuevas atenciones medicas esta semana.";
 
         $citasPorMes = CitaMedica::selectRaw('MONTH(fecha) as mes, COUNT(*) as total')
             ->groupBy('mes')

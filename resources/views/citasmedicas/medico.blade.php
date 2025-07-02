@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto max-w-4xl px-4">
-    <h1 class="text-2xl font-bold mb-4">Citas asignadas</h1>
+    <h1 class="text-2xl font-bold mb-4">Citas asignadas pendientes del Dr/a. {{$medico->usuario->nombre}} {{$medico->usuario->apellido}}</h1>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

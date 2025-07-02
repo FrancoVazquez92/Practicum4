@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\AtencionMedica;
 use App\Models\CitaMedica;
 use App\Models\Paciente;
@@ -20,7 +22,16 @@ class AtencionMedicaController extends Controller
 
     public function index(Medico $medico)
     {
-        $atenciones = AtencionMedica::all(); 
+        $medico = Auth::user()->medico;
+
+        // Filtra atenciones cuya cita fue asignada al médico autenticado
+        $atenciones = AtencionMedica::whereHas('cita', function ($query) use ($medico) {
+            $query->where('medico_id', $medico->id);
+        })
+        ->with(['cita.paciente.usuario'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
         return view('atencionmedicas.index', compact('atenciones'));
     }
 
@@ -29,7 +40,18 @@ class AtencionMedicaController extends Controller
      */
     public function create()
     {
-        $citas = CitaMedica::with(['paciente.usuario'])->get(); // Incluyo los datos del usuario del paciente
+        $usuarioId = Auth::id();
+
+        $medico = Medico::find($usuarioId); 
+
+        $citas = CitaMedica::where('medico_id', $medico->id)
+                            //->whereDate('fecha', '>=', now()->toDateString()) esto es para validar que sean solo con fechas posteriores a hoy
+                            ->whereDoesntHave('atencionMedica')
+                            ->with('paciente.usuario')
+                            ->orderBy('fecha')
+                            ->orderBy('hora')
+                            ->get();
+        
         return view('atencionmedicas.create', compact('citas'));
     }
 

@@ -10,26 +10,35 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Notifications\CitaCreada;
 use App\Notifications\CitaModificada;
+use Illuminate\Validation\ValidationException;
 
 class CitaMedicaController extends Controller
 {
     public function __construct()
-{
-    $this->middleware('auth');
-    $this->middleware('permiso:gestionar_citas|gestionar_citasAsignadas'); 
-}
-
+    {
+        $this->middleware('auth');
+        $this->middleware('permiso:gestionar_citas|gestionar_citasAsignadas');
+    }
 
     public function index(Paciente $paciente)
     {
-        return view('citasmedicas.index', compact('paciente'));
+        $citas = CitaMedica::where('paciente_id', $paciente->id)
+            ->whereDoesntHave('atencionMedica') // 🔍 Citas sin atención médica
+            ->with(['medico.usuario'])
+            ->orderBy('fecha')
+            ->orderBy('hora')
+            ->get();
+
+        return view('citasmedicas.index', compact('citas', 'paciente'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Paciente $paciente, Medico $medico, Agenda $agenda)
+    public function create(Paciente $paciente)
     {
+        $medico = Medico::all();
+        $agenda = Agenda::all();
         $especialidades = Medico::distinct('especialidad')->pluck('especialidad'); 
 
         return view('citasmedicas.create', compact('paciente', 'medico', 'agenda', 'especialidades'));
@@ -77,11 +86,12 @@ class CitaMedicaController extends Controller
      */
     public function edit($id)
     {
-        $cita = CitaMedica::findOrFail($id); // Obtiene la cita médica por ID
-        $pacientes = Paciente::all(); // Lista de pacientes
-        $medicos = Medico::all(); // Lista de médicos
+        $cita = CitaMedica::findOrFail($id);
+        $pacientes = Paciente::all();
+        $medicos = Medico::all();
+        $especialidades = Medico::distinct('especialidad')->pluck('especialidad');
 
-        return view('citasmedicas.edit', compact('cita', 'pacientes', 'medicos'));
+        return view('citasmedicas.edit', compact('cita', 'pacientes', 'medicos', 'especialidades'));
     }
 
     /**
@@ -144,12 +154,13 @@ class CitaMedicaController extends Controller
 
     public function citasDelMedico(Medico $medico)
     {
-        
         $citas = CitaMedica::where('medico_id', $medico->id)
+            ->whereDoesntHave('atencionMedica') // 🔍 Citas sin atención médica
             ->with(['paciente.usuario'])
             ->orderBy('fecha')
             ->orderBy('hora')
             ->get();
+
         return view('citasmedicas.medico', compact('citas', 'medico'));
     }
 
@@ -172,6 +183,10 @@ class CitaMedicaController extends Controller
             ]
         ]);
     }
-
+    public function seleccionarPaciente()
+    {   
+        $pacientes = Paciente::with('usuario')->get();
+        return view('citasmedicas.seleccionarPaciente', compact('pacientes'));
+    }
 
 }

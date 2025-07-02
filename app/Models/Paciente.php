@@ -19,4 +19,8 @@ class Paciente extends Model
     {
         return $this->hasMany(CitaMedica::class);
     }
+    public function atencionMedica()
+    {
+        return $this->hasMany(AtencionMedica::class);
+    }
 }

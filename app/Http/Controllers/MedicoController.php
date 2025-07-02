@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Rol;
 use App\Models\Medico;
 use App\Models\Usuario;
+use App\Models\Paciente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +14,7 @@ class MedicoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permiso:gestionar_doctores');
+        $this->middleware('permiso:gestionar_doctores')->except('porEspecialidad');
     }
 
     public function index()
@@ -104,5 +105,23 @@ class MedicoController extends Controller
                     ->get();
 
         return response()->json($medicos);
+    }
+    public function destroy(Medico $medico)
+    {
+        // Verificar si el médico tiene citas médicas asociadas
+        if ($medico->citasMedicas()->exists()) {
+            return redirect()->route('medicos.index')
+                ->with('error', 'No se puede eliminar al médico porque tiene citas médicas registradas.');
+        }
+
+        // Eliminar al usuario asociado
+        if ($medico->usuario) {
+            $medico->usuario->delete();
+        }
+
+        // Eliminar al médico
+        $medico->delete();
+
+        return redirect()->route('medicos.index')->with('success', 'Médico eliminado correctamente.');
     }
 }

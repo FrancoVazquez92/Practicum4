@@ -14,7 +14,13 @@
     @if($medico->agendas->isEmpty())
         <p>No hay horarios disponibles registrados.</p>
     @else
-        <table class="table table-bordered">
+
+    @if (session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+            <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Día</th>

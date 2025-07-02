@@ -15,11 +15,17 @@ class Medico extends Model
     {
         return $this->belongsTo(Usuario::class, 'id');
     }
+    
 
     public function agendas()
     {
         return $this->hasMany(Agenda::class);
     }
+    public function citasMedicas()
+    {
+        return $this->hasMany(CitaMedica::class);
+    }
+
 
 }
 

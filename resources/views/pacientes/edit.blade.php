@@ -4,7 +4,7 @@
 <div class="container mx-auto px-4 max-w-lg">
     <h1 class="text-2xl font-bold mb-4">Editar Paciente</h1>
 
-    <form action="{{ route('pacientes.update', $medico) }}" method="POST" class="space-y-4">
+    <form action="{{ route('pacientes.update', $paciente) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 

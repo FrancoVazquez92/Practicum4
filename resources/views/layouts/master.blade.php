@@ -52,16 +52,38 @@
                 <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('rols.index') }}">⚙️ Roles</a></li>
             @endif
             @if(in_array('gestionar_citas', $permisos))
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('citasmedicas.index', $usuarioId) }}">📅 Citas Médicas</a></li>
+                @if (Auth::user()->rol->nombre === 'Secretaria')
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="{{ route('citasmedicas.seleccionarPaciente') }}">➕ Crear Cita Médica</a>
+                    </li>
+                @else
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="{{ route('citasmedicas.index', $usuarioId) }}">📅 Citas Médicas</a>
+                    </li>
+                @endif
             @endif
+
             @if(in_array('gestionar_atenciones', $permisos))
                 <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('atencionmedicas.index') }}">📝 Atención Médica</a></li>
             @endif
             @if(in_array('ver_historial', $permisos))
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('historial.index', $usuarioId) }}">📝 Historial Medico</a></li>
+                @if (Auth::user()->rol->nombre === 'Medico')
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="{{ route('historial.seleccionarPacienteMedico') }}">🧾 Historial de Pacientes </a>
+                    </li>
+                @else
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="{{ route('historial.index', $usuarioId) }}">📝 Historial Medico</a></li>
+                @endif
             @endif
             @if(in_array('gestionar_disponibilidad', $permisos))
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('agendas.index', $usuarioId) }}">🕒 Gestionar disponibilidad</a></li>
+                @if (Auth::user()->rol->nombre === 'Secretaria')
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" href="{{ route('agendas.seleccionarMedico') }}">🕒 Gestionar Agenda de un Medico</a>
+                        </li>
+                @else
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="{{ route('agendas.index', $usuarioId) }}">🕒 Gestionar disponibilidad</a></li>
+                @endif
             @endif
             @if(in_array('gestionar_citasAsignadas', $permisos))
                 <li class="nav-item"><a class="nav-link text-white" href="{{ route('citasmedicas.medico', $usuarioId) }}">📋 Citas asignadas</a></li>

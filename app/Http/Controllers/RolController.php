@@ -47,7 +47,7 @@ class RolController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'permisos' => 'nullable|array',
+            'permisos' => 'required|array',
         ]);
 
         Rol::create([
@@ -73,7 +73,7 @@ class RolController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'permisos' => 'nullable|array',
+            'permisos' => 'required|array',
         ]);
 
         $rol->update([

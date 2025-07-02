@@ -33,10 +33,7 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -51,6 +48,18 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+Route::get('/citasmedicas/seleccionar-paciente', [CitaMedicaController::class, 'seleccionarPaciente'])
+    ->name('citasmedicas.seleccionarPaciente')
+    ->middleware('auth');
+
+Route::get('/historial/seleccionar-paciente', [HistorialMedicoController::class, 'seleccionarPacienteMedico'])
+    ->name('historial.seleccionarPacienteMedico')
+    ->middleware('auth');
+
+Route::get('/agendas/seleccionar-medico', [AgendaController::class, 'seleccionarMedico'])
+    ->name('agendas.seleccionarMedico')
+    ->middleware('auth');
+    
 Route::resource('pacientes', PacienteController::class);
 Route::resource('medicos', MedicoController::class);
 Route::resource('atencionmedicas', AtencionMedicaController::class);
@@ -89,3 +98,4 @@ Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'histor
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::get('/dashboard/datos', [DashboardController::class, 'datos'])->name('dashboard.datos');
+

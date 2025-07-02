@@ -16,9 +16,10 @@
             class="w-full border border-gray-300 rounded px-4 py-2" required>
     </div>
 
-    <div class="form-group">
+    <div>
         <label class="block font-semibold mb-1" for="email">Correo electrónico</label>
-        <input type="email" name="email" class="w-full border border-gray-300 rounded px-4 py-2"  value="{{ old('email') }}">
+        <input type="email" name="email" id="email" value="{{ old('email', $medico->usuario->email ?? '') }}"
+            class="w-full border border-gray-300 rounded px-4 py-2" required>
         @error('email')
             <small class="text-danger">Correo ya registrado</small>
         @enderror

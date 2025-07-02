@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto px-4 max-w-4xl">
-    <h2 class="text-2xl font-bold mb-4">Citas del paciente: {{ $paciente->usuario->nombre }} {{ $paciente->usuario->apellido }}</h2>
+    <h2 class="text-2xl font-bold mb-4">Citas pendientes del paciente: {{ $paciente->usuario->nombre }} {{ $paciente->usuario->apellido }}</h2>
 
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
@@ -11,7 +11,7 @@
     @endif
 
     <a href="{{ route('citasmedicas.create', $paciente) }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 inline-block">
-        Agregar cita
+        + Agregar cita
     </a>
 
     @if($paciente->citasmedicas->isEmpty())
@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($paciente->citasmedicas as $cita)
+                    @foreach($citas as $cita)
                         <tr class="border-t text-sm text-gray-800">
                             <td class="px-4 py-2">{{ \Carbon\Carbon::parse($cita->fecha)->format('d/m/Y') }}</td>
                             <td class="px-4 py-2">{{ \Carbon\Carbon::parse($cita->hora)->format('H:i') }}</td>

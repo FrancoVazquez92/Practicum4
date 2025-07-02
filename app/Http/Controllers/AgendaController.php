@@ -6,13 +6,14 @@ use App\Models\Agenda;
 use App\Models\Medico;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\CitaMedica;
 
 class AgendaController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permiso:gestionar_disponibilidad');
+        $this->middleware('permiso:gestionar_disponibilidad')->except('fechasDisponibles','horariosDisponibles');
     }
     public function index(Medico $medico)
     {
@@ -32,6 +33,22 @@ class AgendaController extends Controller
             'hora_fin'    => 'required|date_format:H:i|after:hora_inicio',
         ]);
 
+        $fecha = $request->input('dia');
+        $horaInicio = $request->input('hora_inicio');
+
+        $fechaHoraInicio = Carbon::createFromFormat('Y-m-d H:i', "{$fecha} {$horaInicio}");
+        $ahora = Carbon::now();
+
+        // Si la fecha es hoy, valido que la hora de inicio sea al menos 30 min después de ahora
+        if ($fechaHoraInicio->isToday() && $fechaHoraInicio->lt($ahora->copy()->addMinutes(30))) {
+            return back()->withErrors(['hora_inicio' => 'La hora de inicio debe ser al menos 30 minutos después de la hora actual.'])->withInput();
+        }
+
+        // Si la fecha es anterior a hoy, no permito
+        if ($fechaHoraInicio->isPast() && !$fechaHoraInicio->isToday()) {
+            return back()->withErrors(['dia' => 'No puedes registrar disponibilidad para fechas pasadas.'])->withInput();
+        }
+
         Agenda::create([
             'medico_id'   => $medico->id,
             'dia'         => $request->dia,
@@ -41,6 +58,7 @@ class AgendaController extends Controller
 
         return redirect()->route('agendas.index', $medico)->with('success', 'Disponibilidad registrada.');
     }
+
 
     public function destroy($id)
     {
@@ -54,34 +72,62 @@ class AgendaController extends Controller
     public function fechasDisponibles($medicoId)
     {
         $fechas = Agenda::where('medico_id', $medicoId)
+            ->whereDate('dia', '>=', Carbon::today())
+            ->select('dia')
+            ->distinct()
             ->orderBy('dia')
             ->pluck('dia');
 
         return response()->json($fechas);
+
     }
 
     public function horariosDisponibles($medicoId, $fecha)
     {
-        // Buscar la agenda del médico para esa fecha
-        $agenda = Agenda::where('medico_id', $medicoId)
-                        ->whereDate('dia', $fecha)
-                        ->first();
+        $agendas = Agenda::where('medico_id', $medicoId)
+            ->whereDate('dia', $fecha)
+            ->get();
 
-        if (!$agenda) {
+        if ($agendas->isEmpty()) {
             return response()->json([]);
         }
 
-        $horaInicio = Carbon::parse($agenda->hora_inicio);
-        $horaFin = Carbon::parse($agenda->hora_fin);
-        $horarios = [];
+        $intervalos = [];
+        $hoy = Carbon::today()->toDateString();
+        $horaActual = Carbon::now()->format('H:i');
 
-        while ($horaInicio < $horaFin) {
-            $horarios[] = $horaInicio->format('H:i');
-            $horaInicio->addMinutes(30);
+        foreach ($agendas as $agenda) {
+            $inicio = Carbon::createFromFormat('H:i:s', $agenda->hora_inicio);
+            $fin = Carbon::createFromFormat('H:i:s', $agenda->hora_fin);
+
+            while ($inicio < $fin) {
+                $horaFormateada = $inicio->format('H:i');
+
+                // Si la fecha es hoy, solo permitir horas mayores a la actual
+                if ($fecha > $hoy || $horaFormateada > $horaActual) {
+                    $intervalos[] = $horaFormateada;
+                }
+
+                $inicio->addMinutes(30);
+            }
         }
 
-        return response()->json($horarios);
+        $ocupadas = CitaMedica::where('medico_id', $medicoId)
+            ->whereDate('fecha', $fecha)
+            ->pluck('hora')
+            ->map(fn($hora) => Carbon::createFromFormat('H:i:s', $hora)->format('H:i'))
+            ->toArray();
+
+        $disponibles = array_values(array_diff($intervalos, $ocupadas));
+        $disponibles = array_unique($disponibles);
+        sort($disponibles);
+
+        return response()->json($disponibles);
     }
 
-
+    public function seleccionarMedico()
+    {   
+        $medicos = Medico::with('usuario')->get();
+        return view('agendas.seleccionarMedico', compact('medicos'));
+    }
 }

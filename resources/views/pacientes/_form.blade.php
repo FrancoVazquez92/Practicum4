@@ -17,17 +17,18 @@
     </div>
 
     <div class="form-group">
-    <label for="genero">Género</label>
-    <select name="genero" id="genero" class="form-control" required>
-        <option value="">Seleccione una opción</option>
-        <option value="masculino" {{ old('genero') == 'masculino' ? 'selected' : '' }}>Masculino</option>
-        <option value="femenino" {{ old('genero') == 'femenino' ? 'selected' : '' }}>Femenino</option>
-    </select>
-</div>
+        <label for="genero">Género</label>
+        <select name="genero" id="genero" class="form-control" required>
+            <option value="">Seleccione una opción</option>
+            <option value="masculino" {{ (old('genero') ?? $paciente->genero) == 'masculino' ? 'selected' : '' }}>Masculino</option>
+            <option value="femenino" {{ (old('genero') ?? $paciente->genero) == 'femenino' ? 'selected' : '' }}>Femenino</option>
+        </select>
+    </div>
 
-    <div class="form-group">
+    <div>
         <label class="block font-semibold mb-1" for="email">Correo electrónico</label>
-        <input type="email" name="email" class="w-full border border-gray-300 rounded px-4 py-2"  value="{{ old('email') }}">
+        <input type="email" name="email" id="email" value="{{ old('email', $paciente->usuario->email ?? '') }}"
+            class="w-full border border-gray-300 rounded px-4 py-2" required>
         @error('email')
             <small class="text-danger">Correo ya registrado</small>
         @enderror
@@ -56,8 +57,8 @@
 
         <!-- Visible pero no editable -->
         <input type="text" class="w-full border border-gray-300 rounded px-4 py-2 bg-gray-100" 
-            value="{{ $roles->nombre }}" disabled>
+            value="{{ $rol->nombre }}" disabled>
 
         <!-- Oculto pero se envía al backend -->
-        <input type="hidden" name="rol_id" value="{{ $roles->id }}">
+        <input type="hidden" name="rol_id" value="{{ $rol->id }}">
     </div>

@@ -26,5 +26,9 @@ class CitaMedica extends Model
     {
         return $this->belongsTo(Medico::class);
     }
+    public function atencionMedica()
+    {
+        return $this->hasOne(AtencionMedica::class);
+    }
 }
 

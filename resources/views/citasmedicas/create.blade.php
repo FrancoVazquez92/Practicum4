@@ -41,7 +41,7 @@
             <label for="hora" class="block text-sm font-medium text-gray-700 mb-1">Hora disponible:</label>
             <select name="hora" id="horarios" required class="w-full border-gray-300 rounded-md shadow-sm">
                 <option value="">-- Seleccione una hora --</option>
-            </select>
+            </select>     
         </div>
 
         <div>
@@ -53,11 +53,11 @@
 
 <script>
     document.getElementById('especialidad').addEventListener('change', function () {
+        
         const especialidad = this.value;
-
-        fetch(`/medicos/por-especialidad/${especialidad}`)
+        fetch(`/medicos/por-especialidad/${especialidad}`)                
             .then(res => res.json())
-            .then(medicos => {
+            .then(medicos => {                             
                 const medicoSelect = document.getElementById('medico');
                 medicoSelect.innerHTML = '<option value="">-- Seleccione un médico --</option>';
                 medicos.forEach(medico => {
@@ -87,7 +87,7 @@
         const fecha = this.value;
         const medicoId = document.getElementById('medico').value;
 
-        if (!fecha || !medicoId) return;
+        if (!fecha || !medicoId) return;     
 
         fetch(`/agenda/horarios-disponibles/${medicoId}/${fecha}`)
             .then(res => res.json())
@@ -99,5 +99,6 @@
                 });
             });
     });
+
 </script>
 @endsection

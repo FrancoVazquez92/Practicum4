@@ -16,6 +16,10 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
+                <!-- Informativo -->
+                <p class="text-sm text-gray-600 mb-2">Registrándose como: <strong>Paciente</strong></p>
+
+
                 <!-- Nombre -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="nombre">Nombre</label>
@@ -55,6 +59,20 @@
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2" for="direccion">Direccion</label>
+                    <input type="text" name="direccion" id="direccion" value="{{ old('direccion', $paciente->direccion ?? '') }}"
+                        class="w-full border border-gray-300 rounded px-4 py-2" required>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2" for="genero">Género</label>
+                    <select name="genero" id="genero" required class="w-full border border-gray-300 rounded px-4 py-2">
+                        <option value="">Seleccione</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                    </select>
+                </div>
 
                 <!-- Contraseña -->
                 <div class="mb-4">
@@ -72,6 +90,10 @@
                     <input id="password_confirmation" type="password" name="password_confirmation" required
                         class="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500">
                 </div>
+
+                <!-- Asignar el rol paciente automáticamente -->
+                <input type="hidden" name="rol_id" value="{{ \App\Models\Rol::where('nombre', 'paciente')->first()->id }}">
+
 
                 <!-- Botón -->
                 <div class="flex items-center justify-between">
