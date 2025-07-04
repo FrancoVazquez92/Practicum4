@@ -14,6 +14,7 @@ class Emergencia extends Model
         'numero_identificacion',
         'fecha_nacimiento',
         'genero',
+        'categoria'
     ];
 
     public function triaje()

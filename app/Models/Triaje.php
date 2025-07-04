@@ -14,6 +14,7 @@ class Triaje extends Model
         'presion_arterial_sistolica',
         'saturacion_oxigeno',
         'nivel_conciencia',
+        'puntaje',
     ];
 
     public function emergencia()

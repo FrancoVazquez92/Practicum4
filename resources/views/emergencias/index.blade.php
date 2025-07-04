@@ -31,7 +31,6 @@
                 <td>{{ $emergencia->genero }}</td>
                 <td>{{ $emergencia->categoria }}</td>
                 <td>
-                    <!-- Otros botones como Editar, Eliminar, etc. -->
 
                     <!-- Botón Ver Triaje -->
                     <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#triajeModal{{ $emergencia->id_emergencia }}">
@@ -56,7 +55,7 @@
                                     <li class="list-group-item"><strong>Presión Arterial Sistólica:</strong> {{ $emergencia->triaje->presion_arterial_sistolica }}</li>
                                     <li class="list-group-item"><strong>Saturación de Oxígeno (SpO2):</strong> {{ $emergencia->triaje->saturacion_oxigeno }}</li>
                                     <li class="list-group-item"><strong>Nivel de Conciencia (AVPU):</strong> {{ $emergencia->triaje->nivel_conciencia }}</li>
-                                    <li class="list-group-item"><strong>Categoria:</strong> {{ $emergencia->categoria }}</li>
+                                    <li class="list-group-item"><strong>Puntaje:</strong> {{ $emergencia->triaje->puntaje }}</li>
 
                                 </ul>
                             @else

@@ -20,7 +20,7 @@
                         data-fecha="{{ $paciente->fecha_nacimiento }}"
                         data-genero="{{ $paciente->genero }}"
                     >
-                        {{ $paciente->usuario->nombre }} {{ $paciente->usuario->apellido }} - {{ $paciente->numero_identificacion }}
+                        {{ $paciente->usuario->nombre }} {{ $paciente->usuario->apellido }}
                     </option>
                 @endforeach
             </select>
@@ -78,6 +78,18 @@
             </select>
         </div>
 
+        <div class="mb-3">
+            <label for="puntaje" class="form-label">Puntaje</label>
+            <input type="text" name="puntaje" id="puntaje" class="form-control" readonly required>
+        </div>
+
+        <div class="mb-3">
+            <label for="categoria" class="form-label">Categoria</label>
+            <input type="text" name="categoria" id="categoria" class="form-control" readonly required>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-3" id="btnCalcular">Calcular</button>
+
         <button type="submit" class="btn btn-primary">Guardar Emergencia y Triaje</button>
     </form>
 </div>
@@ -97,6 +109,37 @@ document.addEventListener('DOMContentLoaded', function () {
         fechaInput.value = selected.getAttribute('data-fecha') || '';
         generoInput.value = selected.getAttribute('data-genero') || '';
     });
+
+    // Botón Calcular
+    document.getElementById('btnCalcular').addEventListener('click', function () {
+        const datos = {
+            frecuencia_cardiaca: document.getElementById('frecuencia_cardiaca').value,
+            frecuencia_respiratoria: document.getElementById('frecuencia_respiratoria').value,
+            presion_arterial_sistolica: document.getElementById('presion_arterial_sistolica').value,
+            saturacion_oxigeno: document.getElementById('saturacion_oxigeno').value,
+            nivel_conciencia: document.getElementById('nivel_conciencia').value,
+            _token: '{{ csrf_token() }}'
+        };
+
+        fetch("{{ route('triaje.calcular') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('puntaje').value = data.puntaje;
+            document.getElementById('categoria').value = data.categoria;
+        })
+        .catch(error => {
+            console.error("Error al calcular:", error);
+            alert("Ocurrió un error al calcular el puntaje.");
+        });
+    });
 });
 </script>
+
 @endsection

@@ -102,3 +102,5 @@ Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'histor
 
 
 Route::get('/dashboard/datos', [DashboardController::class, 'datos'])->name('dashboard.datos');
+
+Route::post('/triaje/calcular', [TriajeController::class, 'calcular'])->name('triaje.calcular');
