@@ -88,6 +88,9 @@
             @if(in_array('gestionar_citasAsignadas', $permisos))
                 <li class="nav-item"><a class="nav-link text-white" href="{{ route('citasmedicas.medico', $usuarioId) }}">📋 Citas asignadas</a></li>
             @endif
+            @if(in_array('gestionar_emergencias', $permisos))
+                <li class="nav-item"><a class="nav-link text-white" href="{{ route('emergencias.index') }}">Emergencias</a></li>
+            @endif
         </ul>
     </nav>
 

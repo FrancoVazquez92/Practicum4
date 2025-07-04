@@ -33,14 +33,15 @@ class PacienteController extends Controller
         $rol = Rol::where('nombre', 'paciente')->firstOrFail();
 
         $request->validate([
-            'nombre'    => 'required|string|max:255',
-            'apellido'  => 'required|string|max:255',
-            'email'     => 'required|email|unique:usuarios,email',
-            'contacto'  => 'required|string|max:15',
-            'password'  => 'required|string|confirmed|min:6',
-            'direccion' => 'required|string|max:255',
-            'genero' => 'required|in:masculino,femenino',
-
+            'nombre'                 => 'required|string|max:255',
+            'apellido'               => 'required|string|max:255',
+            'email'                  => 'required|email|unique:usuarios,email',
+            'contacto'               => 'required|string|max:15',
+            'password'               => 'required|string|confirmed|min:6',
+            'direccion'              => 'required|string|max:255',
+            'genero'                 => 'required|in:masculino,femenino',
+            'numero_identificacion' => 'required|string|max:255|unique:pacientes,numero_identificacion',
+            'fecha_nacimiento'       => 'required|date',
         ]);
 
         // Crear el usuario
@@ -55,9 +56,11 @@ class PacienteController extends Controller
 
         // Crear el paciente
         Paciente::create([
-            'id'        => $usuario->id,
-            'direccion' => $request->direccion,
-            'genero'    => $request->genero,
+            'id'                    => $usuario->id,
+            'direccion'             => $request->direccion,
+            'genero'                => $request->genero,
+            'numero_identificacion' => $request->numero_identificacion,
+            'fecha_nacimiento'      => $request->fecha_nacimiento,
         ]);
 
         return redirect()->route('pacientes.index')->with('success', 'Paciente creado con éxito.');
@@ -73,13 +76,14 @@ class PacienteController extends Controller
     public function update(Request $request, Paciente $paciente)
     {
         $request->validate([
-            'nombre'    => 'required|string|max:255',
-            'apellido'  => 'required|string|max:255',
-            'email'     => "required|email|unique:usuarios,email,{$paciente->id}",
-            'contacto'  => 'required|string|max:15',
-            'direccion' => 'required|string|max:255',
-            'genero' => 'required|in:masculino,femenino',
-
+            'nombre'                 => 'required|string|max:255',
+            'apellido'               => 'required|string|max:255',
+            'email'                  => "required|email|unique:usuarios,email,{$paciente->id}",
+            'contacto'               => 'required|string|max:15',
+            'direccion'              => 'required|string|max:255',
+            'genero'                 => 'required|in:masculino,femenino',
+            'numero_identificacion' => "required|string|max:255|unique:pacientes,numero_identificacion,{$paciente->id},id",
+            'fecha_nacimiento'       => 'required|date',
         ]);
 
         $usuario = $paciente->usuario;
@@ -91,8 +95,10 @@ class PacienteController extends Controller
         ]);
 
         $paciente->update([
-            'direccion' => $request->direccion,
-            'genero'    => $request->genero,
+            'direccion'             => $request->direccion,
+            'genero'                => $request->genero,
+            'numero_identificacion' => $request->numero_identificacion,
+            'fecha_nacimiento'      => $request->fecha_nacimiento,
         ]);
 
         return redirect()->route('pacientes.index')->with('success', 'Paciente actualizado correctamente.');

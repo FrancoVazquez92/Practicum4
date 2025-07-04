@@ -21,6 +21,7 @@ class RolController extends Controller
         'ver_historial' => 'Ver Historial Médico',
         'gestionar_disponibilidad' => 'Gestionar Disponibilidad Medica',
         'gestionar_citasAsignadas' => 'Gestionar Citas Asignadas',
+        'gestionar_emergencias' => 'Gestionar Emergencias',
     ];
 
     public function __construct()

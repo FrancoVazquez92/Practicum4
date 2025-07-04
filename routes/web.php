@@ -15,6 +15,8 @@ use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\HistorialMedicoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmergenciaController;
+use App\Http\Controllers\TriajeController;
 
 
 /*
@@ -40,10 +42,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 });
 
 require __DIR__.'/auth.php';
@@ -59,7 +61,9 @@ Route::get('/historial/seleccionar-paciente', [HistorialMedicoController::class,
 Route::get('/agendas/seleccionar-medico', [AgendaController::class, 'seleccionarMedico'])
     ->name('agendas.seleccionarMedico')
     ->middleware('auth');
-    
+
+Route::resource('triajes', TriajeController::class);
+Route::resource('emergencias', EmergenciaController::class);
 Route::resource('pacientes', PacienteController::class);
 Route::resource('medicos', MedicoController::class);
 Route::resource('atencionmedicas', AtencionMedicaController::class);
@@ -69,6 +73,7 @@ Route::resource('administradores', AdministradorController::class)->parameters([
 Route::resource('gerencias', GerenciaController::class);
 Route::resource('agendas', AgendaController::class);
 Route::resource('citasmedicas', CitaMedicaController::class);
+//Route::resource('emergencias', EmergenciaController::class);
 
 // Agenda específica de un médico
 Route::get('/medicos/{medico}/agendas', [AgendaController::class, 'index'])->name('agendas.index');
@@ -96,6 +101,4 @@ Route::get('/citasmedicas/{id}/detalles', [CitaMedicaController::class, 'detalle
 Route::get('/historial/{pacienteId}', [HistorialMedicoController::class, 'historialPaciente'])->name('historial.index');
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::get('/dashboard/datos', [DashboardController::class, 'datos'])->name('dashboard.datos');
-

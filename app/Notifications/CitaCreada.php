@@ -21,10 +21,10 @@ class CitaCreada extends Notification
 
     public function via($notifiable)
     {
-        return ['database']; // Usa la base de datos
+        return ['database']; // Usa la base de datos o return ['mail', 'nexmo'] para enviar por correo o sms
     }
 
-    public function toDatabase($notifiable)
+    public function toDatabase($notifiable) //'toMail' metodo para enviar por correoelectronico, 'toNexmo' metodo para enviar por sms 
     {
         return [
             'tipo' => 'cita',
